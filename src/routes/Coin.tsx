@@ -134,7 +134,7 @@ const Tab = styled.span<{ isActive: boolean }>`
     background-color: rgba(0,0,0,0.5);
     padding: 7px 0px;
     border-radius: 10px;
-    color: ${props => props.isActive ? props.theme.accentColor : props.theme.textColor}
+    color: ${(props) => props.isActive ? props.theme.accentColor : props.theme.textColor}
     a {
         display: block;
     }
@@ -147,9 +147,10 @@ const Tab = styled.span<{ isActive: boolean }>`
 
 function Coin(){
     const { coinId } = useParams<{coinId: string}>();
-     const {state} =  useLocation() as RouterState; 
+    const {state} =  useLocation() as RouterState; 
+    const chartMatch = useMatch("/:coinId/chart");  
     const priceMatch = useMatch("/:coinId/price");
-    const chartMatch = useMatch("/:coinId/chart");
+     
 
     const { isLoading: infoLoading, data:infoData } = useQuery<IInfoData>(["info", coinId], () => fetchCoinInfo(coinId));
     const { isLoading: tickersLoading, data:tickersData } = useQuery<IPriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
@@ -184,8 +185,8 @@ function Coin(){
     </Header>
     {loading ? (<Loader>Loading...</Loader>
     ) : (
-        <>
-            <Overview>
+        <div>
+        <Overview>
                 <OverviewItem>
                     <span>Rank:</span>
                     <span>{infoData?.rank}</span>
@@ -210,18 +211,19 @@ function Coin(){
                     <span>{tickersData?.max_supply}</span>
                 </OverviewItem>
             </Overview>
-
             <Tabs>
                 <Tab isActive={chartMatch !== null}>
-                    <Link to={`/${coinId}/chart`}>Chart</Link>
+                <Link to={`/${coinId}/chart`}>
+                chart
+                </Link>
                 </Tab>
                 <Tab isActive={priceMatch !== null}>
-                    <Link to={`/${coinId}/price`}>Price</Link>
+                <Link to={`/${coinId}/price`}>
+                price
+                </Link>
                 </Tab>
             </Tabs>
-            
-            
-        </>
+        </div>
     )} 
     
   
